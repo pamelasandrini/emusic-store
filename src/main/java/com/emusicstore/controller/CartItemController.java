@@ -18,8 +18,10 @@ public class CartItemController {
 	 * @param request
 	 * @return
 	 */
+	@RequestMapping
 	public String get(HttpServletRequest request) {
 		// using the session id as the cart id
+		//TODO: check if this is best practice
 		return "redirect:/cart/" + request.getSession(true).getId();
 	}
 

@@ -98,4 +98,9 @@ public class CartRestService {
 	public void handleServerErrors(Exception e) {
 		// do nothing
 	}
+	
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String getCartId(HttpServletRequest request) {
+		return request.getSession(true).getId();
+	}
 }

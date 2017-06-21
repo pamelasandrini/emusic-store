@@ -11,8 +11,10 @@
 <meta name="author" content="">
 
 <title>View Cart</title>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+<script src="<c:url value="/resources/js/angular-controller.js" /> "></script>
 <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
+<%-- <link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">--%>
 </head>
 <body>
 
@@ -30,44 +32,48 @@
 				</div>
 			</section>
 			
-			<section class="container">
-				<div>
-					<a class="btn btn-danger pull-left"><span class="glyphicon glyphicon-remove-sign"></span>Clear Cart</a>
+			<section class="container" ng-app="cartApp">
+				<div ng-controller = "cartCtrl" ng-init="initCartId('${cartId}')">
+					<div>
+						<a class="btn btn-danger pull-left" ng-click="clearCart()"><span class="glyphicon glyphicon-remove-sign"></span> Clear Cart</a>
+					</div>
+					
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Product</th>
+								<th>Unit Price</th>
+								<th>Quantity</th>
+								<th>Price</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+			                <tr ng-repeat = "item in cart.cartItems">
+			                    <td>{{item.product.productName}}</td>
+			                    <td>{{item.product.productPrice}}</td>
+			                    <td>{{item.quantity}}</td>
+			                    <td>{{item.totalPrice}}</td>
+			                    <td><a href="#" class="label label-danger" ng-click="removeFromCart(item.product.id)"><span class="glyphicon glyphicon-remove"></span> remove</a></td>
+			                </tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td>Grand Total</td>
+								<th>{{cart.grandTotal}}</th>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<a href='<spring:url value="/productList"></spring:url>' class="btn btn-default">Continue shopping</a>
 				</div>
-				
-				<table class="table table-hover">
-					<thead>
-						<tr>
-							<th>Product</th>
-							<th>Unit Price</th>
-							<th>Quantity</th>
-							<th>Price</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>productName</td>
-							<td>productPrice</td>
-							<td>quantity</td>
-							<td>totalPrice</td>
-							<td>remove button</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td></td>
-							<td>Grand Total</td>
-							<td>grandTotal</td>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
-				
-				<a href='<spring:url value="/productList"></spring:url>'>Continue shopping</a>
 			</section>
+			
+			<br>
+			<%@ include file="/WEB-INF/views/template/footer.jsp"%>
 		</div>
 	</div>
 
-	<%@ include file="/WEB-INF/views/template/footer.jsp"%>
 </body>
 </html>

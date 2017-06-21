@@ -52,6 +52,7 @@ public class Cart {
 			CartItem existingItem = cartItems.get(productId);
 			// update the quantity
 			existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
+			existingItem.setTotalPrice(existingItem.getTotalPrice() + item.getTotalPrice());
 
 			// update the item
 			cartItems.put(productId, existingItem);
@@ -74,7 +75,7 @@ public class Cart {
 	private void updateGrandTotal() {
 
 		grandTotal = 0;
-		cartItems.entrySet().stream().forEach(i -> grandTotal = grandTotal + i.getValue().getTotalPrice());
-
+		cartItems.values().stream().forEach(i -> grandTotal = grandTotal + i.getTotalPrice());
 	}
 }
+			

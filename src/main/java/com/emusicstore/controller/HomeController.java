@@ -41,6 +41,8 @@ public class HomeController {
 
 		if (product != null) {
 			model.addAttribute(product);
+			
+			//TODO: check if need to pass 'role' param to the View
 			return "viewProduct";
 
 		} else {
