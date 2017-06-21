@@ -56,6 +56,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
             delete-cookies="JSESSIONID"
             invalidate-session="true"
             />
+         <security:csrf disabled="true"/>
     </security:http>
 
     <security:authentication-manager>
