@@ -20,9 +20,9 @@ public class CartItemController {
 	 */
 	@RequestMapping
 	public String get(HttpServletRequest request) {
-		// using the session id as the cart id
+		// using default value
 		//TODO: check if this is best practice
-		return "redirect:/cart/" + request.getSession(true).getId();
+		return "redirect:/cart/" + 1;
 	}
 
 	@RequestMapping(value = "/{cartId}", method = RequestMethod.GET)

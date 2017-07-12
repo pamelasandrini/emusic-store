@@ -66,7 +66,7 @@
 						</tbody>
 					</table>
 					
-					<a href='<spring:url value="/productList"></spring:url>' class="btn btn-default">Continue shopping</a>
+					<a href='<spring:url value="/product/productList"></spring:url>' class="btn btn-default">Continue shopping</a>
 				</div>
 			</section>
 			

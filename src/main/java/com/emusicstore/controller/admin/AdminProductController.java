@@ -1,10 +1,9 @@
-package com.emusicstore.controller;
+package com.emusicstore.controller.admin;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -19,28 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.emusicstore.dao.ProductDao;
 import com.emusicstore.model.Product;
+import com.emusicstore.service.ProductService;
 
 @Controller
-public class AdminController {
+@RequestMapping("/admin")
+public class AdminProductController {
 
 	@Autowired
-	private ProductDao dao;
+	private ProductService productService;
 	private Path path;
-
-	@RequestMapping("/admin")
-	public String admin() {
-		return "admin";
-	}
-
-	@RequestMapping(value = "/admin/productInventory")
-	public String productInventory(Model model) {
-
-		List<Product> productList = dao.getAllProducts();
-		model.addAttribute(productList);
-		return "productInventory";
-	}
 
 	/**
 	 * Get method that redirects to add product view
@@ -48,7 +35,7 @@ public class AdminController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/admin/productInventory/addProduct")
+	@RequestMapping("/productInventory/addProduct")
 	public String addProduct(Model model) {
 		Product product = new Product();
 		product.setProductCategory("instrument");
@@ -68,7 +55,7 @@ public class AdminController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/admin/productInventory/addProduct", method = RequestMethod.POST)
+	@RequestMapping(value = "/productInventory/addProduct", method = RequestMethod.POST)
 	public String addProductPost(@Valid @ModelAttribute Product product, BindingResult result,
 			HttpServletRequest request) {
 
@@ -77,9 +64,9 @@ public class AdminController {
 		}
 
 		System.out.println("adding product : " + product);
-		dao.addProduct(product);
+		productService.addProduct(product);
 
-		// TODO: save the image in db instead
+		// TODO: save the image in db instead since it's not working locally
 		saveImageInLocalFolder(product, request);
 
 		// redirect to another controller
@@ -101,15 +88,15 @@ public class AdminController {
 		}
 	}
 
-	@RequestMapping("/admin/productInventory/deleteProduct/{id}")
+	@RequestMapping("/productInventory/deleteProduct/{id}")
 	public String deleteProduct(@PathVariable int id, HttpServletRequest request) {
 		System.out.println("deleting product id: " + id);
 
 		deleteImageInLocalFolder(id, request);
 
-		// TODO: move the image to db
+		// TODO: move the image to db since it's not working locally
 		// remove the image
-		dao.deleteProduct(id);
+		productService.deleteProduct(id);
 
 		return "redirect:/admin/productInventory";
 	}
@@ -135,10 +122,10 @@ public class AdminController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/admin/productInventory/editProduct/{id}")
+	@RequestMapping(value = "/productInventory/editProduct/{id}")
 	public String editProduct(@PathVariable int id, Model model) {
 
-		Product product = dao.getProductById(id);
+		Product product = productService.getProductById(id);
 		model.addAttribute("product", product);
 
 		return "editProduct";
@@ -151,17 +138,17 @@ public class AdminController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/admin/productInventory/editProduct/{id}", method = RequestMethod.POST)
-	public String editProduct(@Valid @ModelAttribute Product product, BindingResult result, HttpServletRequest request) {
+	@RequestMapping(value = "/productInventory/editProduct/{id}", method = RequestMethod.POST)
+	public String editProduct(@Valid @ModelAttribute Product product, BindingResult result,
+			HttpServletRequest request) {
 
-		if(result.hasErrors())
-		{
+		if (result.hasErrors()) {
 			return "editProduct";
 		}
-		
-		dao.updateProduct(product);
 
-		// TODO: move the image to db
+		productService.editProduct(product);
+
+		// TODO: move the image to db since it's not working locally
 		editImageInLocalFolder(product, request);
 
 		return "redirect:/admin/productInventory";

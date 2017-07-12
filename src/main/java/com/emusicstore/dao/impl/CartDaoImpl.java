@@ -11,7 +11,7 @@ import com.emusicstore.model.Cart;
 @Repository
 public class CartDaoImpl implements CartDao {
 
-	private Map<String, Cart> listOfCarts;
+	private Map<Integer, Cart> listOfCarts;
 
 	public CartDaoImpl() {
 
@@ -33,12 +33,12 @@ public class CartDaoImpl implements CartDao {
 	}
 
 	@Override
-	public Cart read(String id) {
+	public Cart read(int id) {
 		return listOfCarts.get(id);
 	}
 
 	@Override
-	public void update(String id, Cart cart) {
+	public void update(int id, Cart cart) {
 
 		if (!listOfCarts.keySet().contains(cart.getCartId())) {
 			// throw an error
@@ -51,7 +51,7 @@ public class CartDaoImpl implements CartDao {
 	}
 
 	@Override
-	public void delete(String id) {
+	public void delete(int id) {
 		if (!listOfCarts.keySet().contains(id)) {
 			// throw an error
 			throw new IllegalArgumentException(

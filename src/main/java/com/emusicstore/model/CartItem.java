@@ -1,20 +1,58 @@
 package com.emusicstore.model;
 
-public class CartItem {
+import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
+public class CartItem implements Serializable {
+
+	private static final long serialVersionUID = -904360230041854157L;
+
+	@Id
+	@GeneratedValue
+	private int cartItemId;
+
+	@ManyToOne
+	@JoinColumn(name = "cartId")
+	@JsonIgnore
+	private Cart cart;
+
+	@ManyToOne
+	@JoinColumn(name = "productId")
 	private Product product;
+
 	private int quantity;
 	private double totalPrice;
 
 	public CartItem() {
-		super();
+		// does nothing
 	}
 
 	public CartItem(Product product) {
-		super();
 		this.product = product;
-		this.quantity = 1;
-		this.totalPrice = product.getProductPrice();
+	}
+
+	public int getCartItemId() {
+		return cartItemId;
+	}
+
+	public void setCartItemId(int cartItemId) {
+		this.cartItemId = cartItemId;
+	}
+
+	public Cart getCart() {
+		return cart;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
 	}
 
 	public Product getProduct() {
@@ -40,5 +78,4 @@ public class CartItem {
 	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
-
 }

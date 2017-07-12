@@ -26,37 +26,39 @@ public class CartRestService {
 	@Autowired
 	private CartDao cartDao;
 
+	private int cartId = 1;
+
 	@Autowired
 	private ProductDao productDao;
 
 	@RequestMapping(value = "/{cartId}", method = RequestMethod.GET)
 	@ResponseBody
-	public Cart read(@PathVariable("cartId") String cartId) {
+	public Cart read(@PathVariable("cartId") int cartId) {
 		return cartDao.read(cartId);
 	}
 
 	@RequestMapping(value = "/{cartId}", method = RequestMethod.PUT)
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	public void update(@PathVariable("cartId") String cartId, @RequestBody Cart cart) {
+	public void update(@PathVariable("cartId") int cartId, @RequestBody Cart cart) {
 
 		cartDao.update(cartId, cart);
 	}
 
 	@RequestMapping(value = "/{cartId}", method = RequestMethod.DELETE)
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable("cartId") String cartId) {
+	public void delete(@PathVariable("cartId") int cartId) {
 		cartDao.delete(cartId);
 	}
 
 	@RequestMapping(value = "/add/{productId}", method = RequestMethod.PUT)
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void addItem(@PathVariable("productId") int productId, HttpServletRequest request) {
-		String sessionId = request.getSession(true).getId();
-		Cart cart = cartDao.read(sessionId);
+		// String sessionId = request.getSession(true).getId();
+		Cart cart = cartDao.read(cartId);
 
 		if (cart == null) {
 			// create a new cart
-			cart = cartDao.create(new Cart(sessionId));
+			cart = cartDao.create(new Cart(cartId));
 		}
 
 		Product product = productDao.getProductById(productId);
@@ -65,17 +67,16 @@ public class CartRestService {
 		}
 		cart.addCartItem(new CartItem(product));
 
-		cartDao.update(sessionId, cart);
+		cartDao.update(cartId, cart);
 	}
 
 	@RequestMapping(value = "/remove/{productId}", method = RequestMethod.PUT)
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void removeItem(@PathVariable("productId") int productId, HttpServletRequest request) {
-		String sessionId = request.getSession(true).getId();
-		Cart cart = cartDao.read(sessionId);
+		Cart cart = cartDao.read(cartId);
 
 		if (cart == null) {
-			cart = cartDao.create(new Cart(sessionId));
+			cart = cartDao.create(new Cart(cartId));
 		}
 
 		Product product = productDao.getProductById(productId);
@@ -84,7 +85,7 @@ public class CartRestService {
 		}
 		cart.removeCartItem(new CartItem(product));
 
-		cartDao.update(sessionId, cart);
+		cartDao.update(cartId, cart);
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)

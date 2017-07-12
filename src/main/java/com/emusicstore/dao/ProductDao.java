@@ -12,7 +12,7 @@ public interface ProductDao {
 
 	Product getProductById(int id);
 
-	List<Product> getAllProducts();
+	List<Product> getProductList();
 
 	void deleteProduct(int id);
 }
