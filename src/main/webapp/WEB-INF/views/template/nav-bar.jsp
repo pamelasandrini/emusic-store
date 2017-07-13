@@ -19,7 +19,8 @@
 						<li><a href="<c:url value="/" />">Home</a></li>
 						<li><a href="<c:url value="/product/productList" />">Products</a></li>
 						<li><a href="#contact">Contact</a></li>
-						<li><a href="<c:url value="/admin" />">Login</a></li>
+						<li><a href="<c:url value="/admin" />">Sign in</a></li>
+						<li><a href="<c:url value="/register" />">Sign Up</a></li>
 						
 						<%-- leave this comment for future reference
 						<li class="dropdown"><a href="#" class="dropdown-toggle"
