@@ -47,7 +47,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <security:intercept-url pattern="/customer/**" access="hasRole ('ROLE_USER')" />
         <security:form-login
             login-page="/login"
-            default-target-url="/product/productList/"
+            default-target-url="/home"
             authentication-failure-url="/login?error"
             username-parameter="username"
             password-parameter="password" />

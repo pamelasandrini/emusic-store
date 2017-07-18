@@ -12,15 +12,23 @@
 							class="icon-bar"></span> <span class="icon-bar"></span> <span
 							class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="#">My Music Store</a>
+					<a class="navbar-brand" href="<c:url value="/"/>">My Music Store</a>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
-						<li><a href="<c:url value="/" />">Home</a></li>
+						<li><a href="<c:url value="/home" />">Home</a></li>
 						<li><a href="<c:url value="/product/productList" />">Products</a></li>
 						<li><a href="#contact">Contact</a></li>
-						<li><a href="<c:url value="/admin" />">Sign in</a></li>
-						<li><a href="<c:url value="/register" />">Sign Up</a></li>
+						
+						<c:if test="${pageContext.request.userPrincipal.name == null}">
+							<li><a href="<c:url value="/login" />">Sign in</a></li>
+							<li><a href="<c:url value="/register" />">Sign Up</a></li>
+						</c:if>	
+											
+						<c:if test="${pageContext.request.userPrincipal.name != null}">
+							<li><a>Welcome ${pageContext.request.userPrincipal.name} | </a></li>
+							<li><a href="<c:url value="/logout" />">Logout</a></li>
+						</c:if>
 						
 						<%-- leave this comment for future reference
 						<li class="dropdown"><a href="#" class="dropdown-toggle"
@@ -35,11 +43,6 @@
 								<li><a href="#">Separated link</a></li>
 								<li><a href="#">One more separated link</a></li>
 							</ul></li> --%>
-							
-							<c:if test="${pageContext.request.userPrincipal.name != null}">
-								<li><a>Welcome ${pageContext.request.userPrincipal.name} | </a></li>
-								<li><a href="<c:url value="/logout" />">Logout</a></li>
-							</c:if>
 					</ul>
 				</div>
 			</div>
