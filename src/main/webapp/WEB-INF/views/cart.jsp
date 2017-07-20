@@ -60,7 +60,7 @@
 								<td></td>
 								<td></td>
 								<td>Grand Total</td>
-								<th>{{cart.grandTotal}}</th>
+								<th>{{calGrandTotal()}}</th>
 								<td></td>
 							</tr>
 						</tbody>

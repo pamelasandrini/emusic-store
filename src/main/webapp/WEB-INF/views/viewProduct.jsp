@@ -15,9 +15,8 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 <script src="<c:url value="/resources/js/angular-controller.js" /> "></script>
-<link href="<c:url value="/resources/css/bootstrap.min.css" />"
-	rel="stylesheet">
-<%-- <link href="<c:url value="/resources/css/main.css" />"	rel="stylesheet"> --%>	
+<link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
+<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
 
 </head>
 <body>
@@ -53,17 +52,11 @@
 						<p>${product.productPrice}USD</p>
 						
 						<br>
-						
-	                    <c:set var="role" scope="page" value="${param.role}" />
-	                    <c:set var="url" scope="page" value="/product/productList" />
-	                    <c:if test="${role='admin'}">
-	                        <c:set var="url" scope="page" value="/admin/productInventory" />
-	                    </c:if>
 	
 	                    <p ng-controller="cartCtrl">
-	                        <a href="<c:url value="${url}" />" class="btn btn-default">Back</a>
+	                        <a href="<c:url value="/product/productList" />" class="btn btn-default">Back</a>
 	                        <a href="#" class="btn btn-warning btn-large" ng-click="addToCart('${product.id}')"><span class="glyphicon glyphicon-shopping-cart"></span> Order Now</a>
-	                        <a href="<spring:url value="/cart" />" class="btn btn-default"><span class="glyphicon glyphicon-hand-right"></span> View Cart</a>
+	                        <a href="<spring:url value="/customer/cart" />" class="btn btn-default"><span class="glyphicon glyphicon-hand-right"></span> View Cart</a>
 	                    </p>						
 					</div>
 				</div>

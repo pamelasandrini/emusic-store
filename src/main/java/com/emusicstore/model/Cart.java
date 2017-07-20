@@ -81,4 +81,23 @@ public class Cart implements Serializable {
 	public void removeCartItem(CartItem cartItem) {
 		cartItems.remove(cartItem);
 	}
+	
+	public boolean productExists(Product product)
+	{
+		return cartItems.stream().anyMatch(i -> i.getProduct().getId() == product.getId());
+	}
+	
+	public CartItem getCartItemByProduct(Product product)
+	{
+		
+		for (CartItem item : cartItems) {
+			
+			if(item.getProduct().getId() == product.getId())
+			{
+				return item;
+			}
+		}
+		
+		return null;
+	}
 }

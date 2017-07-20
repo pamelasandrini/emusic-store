@@ -36,7 +36,7 @@
 	                </c:if>
 	                <div class="form-group">
 	                    <label for="username">User: </label>
-	                    <input type="text" id="username" name="username" class="form-control" />
+	                    <input type="text" id="username" name="username" class="form-control" autofocus/>
 	                </div>
 	                <div class="form-group">
 	                    <label for="password">Password:</label>

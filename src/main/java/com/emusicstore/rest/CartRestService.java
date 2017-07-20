@@ -1,91 +1,90 @@
 package com.emusicstore.rest;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.emusicstore.dao.CartDao;
-import com.emusicstore.dao.ProductDao;
 import com.emusicstore.model.Cart;
 import com.emusicstore.model.CartItem;
+import com.emusicstore.model.Customer;
 import com.emusicstore.model.Product;
+import com.emusicstore.service.CartItemService;
+import com.emusicstore.service.CartService;
+import com.emusicstore.service.CustomerService;
+import com.emusicstore.service.ProductService;
 
 @Controller
 @RequestMapping("/rest/cart")
 public class CartRestService {
 
 	@Autowired
-	private CartDao cartDao;
-
-	private int cartId = 1;
+	private CartService cartService;
 
 	@Autowired
-	private ProductDao productDao;
+	private CustomerService customerService;
+
+	@Autowired
+	private ProductService productService;
+
+	@Autowired
+	private CartItemService cartItemService;
 
 	@RequestMapping(value = "/{cartId}", method = RequestMethod.GET)
 	@ResponseBody
-	public Cart read(@PathVariable("cartId") int cartId) {
-		return cartDao.read(cartId);
-	}
-
-	@RequestMapping(value = "/{cartId}", method = RequestMethod.PUT)
-	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	public void update(@PathVariable("cartId") int cartId, @RequestBody Cart cart) {
-
-		cartDao.update(cartId, cart);
-	}
-
-	@RequestMapping(value = "/{cartId}", method = RequestMethod.DELETE)
-	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable("cartId") int cartId) {
-		cartDao.delete(cartId);
+	public Cart getCartById(@PathVariable("cartId") int cartId) {
+		return cartService.getCartById(cartId);
 	}
 
 	@RequestMapping(value = "/add/{productId}", method = RequestMethod.PUT)
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	public void addItem(@PathVariable("productId") int productId, HttpServletRequest request) {
-		// String sessionId = request.getSession(true).getId();
-		Cart cart = cartDao.read(cartId);
+	public void addItem(@PathVariable("productId") int productId, @AuthenticationPrincipal User activeUser) {
 
-		if (cart == null) {
-			// create a new cart
-			cart = cartDao.create(new Cart(cartId));
+		Customer customer = customerService.getCustomerByUserName(activeUser.getUsername());
+
+		Cart cart = customer.getCart();
+
+		Product product = productService.getProductById(productId);
+
+		if (cart.productExists(product)) {
+			// just update the quantity
+			CartItem item = cart.getCartItemByProduct(product);
+			item.setQuantity(item.getQuantity() + 1);
+			item.setTotalPrice(item.getTotalPrice() * item.getQuantity());
+
+			cartItemService.addCartItem(item);
+		} else {
+			// add a new product
+			CartItem item = new CartItem(product);
+			item.setQuantity(1);
+			item.setTotalPrice(product.getProductPrice());
+			item.setCart(cart);
+			cartItemService.addCartItem(item);
 		}
 
-		Product product = productDao.getProductById(productId);
-		if (product == null) {
-			throw new IllegalArgumentException(new Exception());
-		}
-		cart.addCartItem(new CartItem(product));
-
-		cartDao.update(cartId, cart);
 	}
 
 	@RequestMapping(value = "/remove/{productId}", method = RequestMethod.PUT)
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	public void removeItem(@PathVariable("productId") int productId, HttpServletRequest request) {
-		Cart cart = cartDao.read(cartId);
+	public void removeItem(@PathVariable("productId") int productId, @AuthenticationPrincipal User activeUser) {
 
-		if (cart == null) {
-			cart = cartDao.create(new Cart(cartId));
-		}
+		CartItem item = cartItemService.getCartItemByProductId(productId);
+		cartItemService.removeCartItem(item);
+	}
 
-		Product product = productDao.getProductById(productId);
-		if (product == null) {
-			throw new IllegalArgumentException(new Exception());
-		}
-		cart.removeCartItem(new CartItem(product));
+	@RequestMapping(value = "/{cartId}", method = RequestMethod.DELETE)
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void clearCart(@PathVariable(value = "cartId") int cartId) {
 
-		cartDao.update(cartId, cart);
+		Cart cart = cartService.getCartById(cartId);
+		cartItemService.removeAllCartItem(cart);
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)

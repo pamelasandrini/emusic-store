@@ -1,64 +1,39 @@
 package com.emusicstore.dao.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.emusicstore.dao.CartDao;
 import com.emusicstore.model.Cart;
 
 @Repository
+@Transactional
 public class CartDaoImpl implements CartDao {
 
-	private Map<Integer, Cart> listOfCarts;
-
-	public CartDaoImpl() {
-
-		listOfCarts = new HashMap<>();
-	}
+	@Autowired
+	private SessionFactory sessionFactory;
 
 	@Override
-	public Cart create(Cart cart) {
+	public Cart getCartById(int cartId) {
+		Session session = sessionFactory.getCurrentSession();
+		Cart cart = session.get(Cart.class, cartId);
 
-		if (listOfCarts.keySet().contains(cart.getCartId())) {
-			// throw an error
-			throw new IllegalArgumentException(
-					"Can not create a cart. A cart with the given id already existis: " + cart.getCartId());
-		}
-
-		listOfCarts.put(cart.getCartId(), cart);
+		session.flush();
 
 		return cart;
 	}
 
 	@Override
-	public Cart read(int id) {
-		return listOfCarts.get(id);
-	}
+	public void update(Cart cart) {
 
-	@Override
-	public void update(int id, Cart cart) {
+		Session session = sessionFactory.getCurrentSession();
+		session.saveOrUpdate(cart);
 
-		if (!listOfCarts.keySet().contains(cart.getCartId())) {
-			// throw an error
-			throw new IllegalArgumentException(
-					"Can not update the cart. A cart with the given id doesn't existis: " + cart.getCartId());
-		}
+		session.flush();
 
-		listOfCarts.put(cart.getCartId(), cart);
-
-	}
-
-	@Override
-	public void delete(int id) {
-		if (!listOfCarts.keySet().contains(id)) {
-			// throw an error
-			throw new IllegalArgumentException(
-					"Can not delete the cart. A cart with the given id doesn't existis: " + id);
-		}
-
-		listOfCarts.remove(id);
 	}
 
 }

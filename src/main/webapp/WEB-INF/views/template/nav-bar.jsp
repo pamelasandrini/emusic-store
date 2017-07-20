@@ -20,8 +20,11 @@
 						<li><a href="<c:url value="/product/productList" />">Products</a></li>
 						<li><a href="#contact">Contact</a></li>
 						
+					</ul>
+						
+					<ul class="nav navbar-nav pull-right">
 						<c:if test="${pageContext.request.userPrincipal.name == null}">
-							<li><a href="<c:url value="/login" />">Sign in</a></li>
+							<li><a href="<c:url value="/login" />">Login In</a></li>
 							<li><a href="<c:url value="/register" />">Sign Up</a></li>
 						</c:if>	
 											

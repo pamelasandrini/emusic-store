@@ -38,7 +38,6 @@ public class RegisterController {
 
 		customer.setEnabled(true);
 		
-		//TODO: check if it's valid
 		service.addCustomer(customer);
 		return "registerCustomerSuccess";
 	}

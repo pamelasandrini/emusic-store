@@ -4,11 +4,8 @@ import com.emusicstore.model.Cart;
 
 public interface CartDao {
 
-	Cart create(Cart cart);
+	Cart getCartById(int cartId);
 
-	Cart read(int id);
+	void update(Cart cart);
 
-	void update(int id, Cart cart);
-
-	void delete(int id);
 }
